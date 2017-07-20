@@ -1,7 +1,7 @@
 from js9 import j
 
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
-
+from issuemanagerlib.IndexInfo import indexinfo
 from peewee import *
 import peewee
 import operator
@@ -31,14 +31,14 @@ class OrgCollection(ModelBaseCollection):
             modTime = TimestampField(index=True, default=j.data.time.epoch)
 
             class Meta:
-                database = issuemanager.indexDB
+                database = indexinfo.indexDB
                 # order_by = ["id"]
 
         return Org
 
     def _init(self):
         # init the index
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
 
         Org = self._getModel()
 
@@ -49,7 +49,7 @@ class OrgCollection(ModelBaseCollection):
         db.create_tables([Org], True)
 
     def reset(self):
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):

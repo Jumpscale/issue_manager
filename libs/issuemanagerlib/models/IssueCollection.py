@@ -1,7 +1,6 @@
 from js9 import j
-
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
-
+from issuemanagerlib.IndexInfo import indexinfo
 from peewee import *
 import peewee
 import operator
@@ -35,13 +34,13 @@ class IssueCollection(ModelBaseCollection):
             isClosed = BooleanField(index=True, default=False)
 
             class Meta:
-                database = issuemanager.indexDB
+                database = indexinfo.indexDB
 
         return Issue
 
     def _init(self):
         # init the index
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
         Issue = self._getModel()
 
         self.index = Issue
@@ -51,7 +50,7 @@ class IssueCollection(ModelBaseCollection):
         db.create_tables([Issue], True)
 
     def reset(self):
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):

@@ -7,7 +7,7 @@ from peewee import *
 import peewee
 import operator
 from playhouse.sqlite_ext import Model
-
+from issuemanagerlib.IndexInfo import indexinfo
 # from playhouse.sqlcipher_ext import *
 # db = Database(':memory:')
 
@@ -31,14 +31,14 @@ class RepoCollection(ModelBaseCollection):
             modTime = TimestampField(index=True, default=j.data.time.epoch)
 
             class Meta:
-                database = issuemanager.indexDB
+                database = indexinfo.indexDB
                 # order_by = ["id"]
 
         return Repo
 
     def _init(self, reset=False):
         # init the index
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
         Repo = self._getModel()
 
         self.index = Repo
@@ -48,7 +48,7 @@ class RepoCollection(ModelBaseCollection):
         db.create_tables([Repo], True)
 
     def reset(self):
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):

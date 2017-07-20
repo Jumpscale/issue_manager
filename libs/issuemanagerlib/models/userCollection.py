@@ -1,5 +1,5 @@
 from js9 import j
-
+from issuemanagerlib.IndexInfo import indexinfo 
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
 
 from peewee import *
@@ -30,14 +30,14 @@ class UserCollection(ModelBaseCollection):
             modTime = TimestampField(index=True, default=j.data.time.epoch)
 
             class Meta:
-                database = issuemanager.indexDB
+                database = indexinfo.indexDB
                 # order_by = ["id"]
 
         return User
 
     def _init(self):
         # init the index
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
 
         User = self._getModel()
 
@@ -48,7 +48,7 @@ class UserCollection(ModelBaseCollection):
         db.create_tables([User], True)
 
     def reset(self):
-        db = issuemanager.indexDB
+        db = indexinfo.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):

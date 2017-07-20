@@ -10,7 +10,7 @@ from issuemanagerlib.models.repoModel import RepoModel
 from issuemanagerlib.models.repoCollection import RepoCollection
 from issuemanagerlib.models.orgModel import OrgModel
 from issuemanagerlib.models.orgCollection import OrgCollection
-from issuemanagerlib import model_capnp as ModelCapnp
+from . import model_capnp as ModelCapnp
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
 
