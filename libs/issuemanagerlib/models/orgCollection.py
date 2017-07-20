@@ -1,5 +1,4 @@
 from js9 import j
-from functools import reduce
 
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
 
@@ -12,43 +11,45 @@ from playhouse.sqlite_ext import Model
 # db = Database(':memory:')
 
 
-class RepoCollection(ModelBaseCollection):
+class OrgCollection(ModelBaseCollection):
     """
-    This class represent a collection of Repos
+    This class represent a collection of Orgs
     """
 
     def _getModel(self):
-        class Repo(Model):
+        class Org(Model):
             key = CharField(index=True, default="")
             gitHostRefs = CharField(index=True, default="")
             name = CharField(index=True, default="")
+            description = CharField(index=True, default="")
             inGithub = BooleanField(index=True, default=False)
             members = CharField(index=True, default="")
+            owners = CharField(index=True, default="")
             nrIssues = IntegerField(index=True, default=0)
-            nrMilestones = IntegerField(index=True, default=0)
-            owner = CharField(index=True, default="")
-            description = CharField(index=True, default="")
+            nrRepos = IntegerField(index=True, default=0)
+            repos = CharField(index=True, default="")
             modTime = TimestampField(index=True, default=j.data.time.epoch)
 
             class Meta:
-                database = j.tools.issuemanager.indexDB
+                database = issuemanager.indexDB
                 # order_by = ["id"]
 
-        return Repo
+        return Org
 
-    def _init(self, reset=False):
+    def _init(self):
         # init the index
-        db = j.tools.issuemanager.indexDB
-        Repo = self._getModel()
+        db = issuemanager.indexDB
 
-        self.index = Repo
+        Org = self._getModel()
+
+        self.index = Org
 
         if db.is_closed():
             db.connect()
-        db.create_tables([Repo], True)
+        db.create_tables([Org], True)
 
     def reset(self):
-        db = j.tools.issuemanager.indexDB
+        db = issuemanager.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):
@@ -56,17 +57,18 @@ class RepoCollection(ModelBaseCollection):
         key = CharField(index=True, default="")
         gitHostRefs = CharField(index=True, default="")
         name = CharField(index=True, default="")
+        description = CharField(index=True, default="")
         inGithub = BooleanField(index=True, default=False)
         members = CharField(index=True, default="")
+        owners = CharField(index=True, default="")
         nrIssues = IntegerField(index=True, default=0)
-        nrMilestones = IntegerField(index=True, default=0)
-        owner = CharField(index=True, default="")
-        description = CharField(index=True, default="")
+        nrRepos = IntegerField(index=True, default=0)
+        repos = CharField(index=True, default="")
         modTime = TimestampField(index=True, default=j.data.time.epoch)
 
         @param args is any of the above
 
-        members can be given as:
+        members, owners and repos can be given as:
             can be "a,b,c"
             can be "'a','b','c'"
             can be ["a","b","c"]
@@ -77,7 +79,7 @@ class RepoCollection(ModelBaseCollection):
         if "gitHostRefs" in args:
             args["gitHostRefs"] = ["%s_%s_%s" % (item["name"], item["id"], item['url']) for item in args["gitHostRefs"]]
 
-        args = self._arraysFromArgsToString(["members", "gitHostRefs"], args)
+        args = self._arraysFromArgsToString(["members", "owners", "repos", "gitHostRefs"], args)
 
         # this will try to find the right index obj, if not create
 
@@ -119,7 +121,7 @@ class RepoCollection(ModelBaseCollection):
 
             res = [
                 item.key for item in self.index.select().where(
-                    reduce(
+                    peewee.reduce(
                         operator.and_,
                         clauses)).order_by(
                     self.index.modTime.desc())]

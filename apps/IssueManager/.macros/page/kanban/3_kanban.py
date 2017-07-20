@@ -1,3 +1,4 @@
+from issuemanagerlib import issuemanager
 
 def main(j, args, params, tags, tasklet):
     import json
@@ -46,7 +47,7 @@ def main(j, args, params, tags, tasklet):
         data = {'id': user['key'], 'name': user['name']}
         return data
 
-    user_collection = j.tools.issuemanager.getUserCollectionFromDB()
+    user_collection = issuemanager.getUserCollectionFromDB()
     users = list(map(createUserData, user_collection.find()))
     users.append({'id': 0,
                   'name': "not assigned",

@@ -1,3 +1,4 @@
+from issuemanagerlib import issuemanager
 
 def main(j, args, params, tags, tasklet):
     from collections import OrderedDict
@@ -14,7 +15,7 @@ def main(j, args, params, tags, tasklet):
 
     data_collection = OrderedDict()
 
-    schema = j.tools.issuemanager.getIssueSchema()
+    schema = issuemanager.getIssueSchema()
     issue_fileds = schema.schema.fields.keys()
     if groupon not in issue_fileds:
         args.doc.applyTemplate({'data_collection': "Issues cannot be grouped on \"%s\"" % groupon})
@@ -27,8 +28,8 @@ def main(j, args, params, tags, tasklet):
         return params
 
 
-    issues = j.tools.issuemanager.getIssueCollectionFromDB()
-    users = j.tools.issuemanager.getUserCollectionFromDB()
+    issues = issuemanager.getIssueCollectionFromDB()
+    users = issuemanager.getUserCollectionFromDB()
 
     if 'assignees' in tags:
         userid = users.find(name=tags['assignees'])

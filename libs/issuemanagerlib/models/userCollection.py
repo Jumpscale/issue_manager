@@ -11,45 +11,44 @@ from playhouse.sqlite_ext import Model
 # db = Database(':memory:')
 
 
-class OrgCollection(ModelBaseCollection):
+class UserCollection(ModelBaseCollection):
     """
-    This class represent a collection of Orgs
+    This class represent a collection of users
     """
 
     def _getModel(self):
-        class Org(Model):
+        class User(Model):
             key = CharField(index=True, default="")
             gitHostRefs = CharField(index=True, default="")
             name = CharField(index=True, default="")
-            description = CharField(index=True, default="")
+            fullname = CharField(index=True, default="")
+            email = CharField(index=True, default="")
             inGithub = BooleanField(index=True, default=False)
-            members = CharField(index=True, default="")
-            owners = CharField(index=True, default="")
-            nrIssues = IntegerField(index=True, default=0)
-            nrRepos = IntegerField(index=True, default=0)
-            repos = CharField(index=True, default="")
+            githubId = CharField(index=True, default="")
+            telegramId = CharField(index=True, default="")
+            iyoId = CharField(index=True, default="")
             modTime = TimestampField(index=True, default=j.data.time.epoch)
 
             class Meta:
-                database = j.tools.issuemanager.indexDB
+                database = issuemanager.indexDB
                 # order_by = ["id"]
 
-        return Org
+        return User
 
     def _init(self):
         # init the index
-        db = j.tools.issuemanager.indexDB
+        db = issuemanager.indexDB
 
-        Org = self._getModel()
+        User = self._getModel()
 
-        self.index = Org
+        self.index = User
 
         if db.is_closed():
             db.connect()
-        db.create_tables([Org], True)
+        db.create_tables([User], True)
 
     def reset(self):
-        db = j.tools.issuemanager.indexDB
+        db = issuemanager.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):
@@ -57,29 +56,22 @@ class OrgCollection(ModelBaseCollection):
         key = CharField(index=True, default="")
         gitHostRefs = CharField(index=True, default="")
         name = CharField(index=True, default="")
-        description = CharField(index=True, default="")
+        fullname = CharField(index=True, default="")
+        email = CharField(index=True, default="")
         inGithub = BooleanField(index=True, default=False)
-        members = CharField(index=True, default="")
-        owners = CharField(index=True, default="")
-        nrIssues = IntegerField(index=True, default=0)
-        nrRepos = IntegerField(index=True, default=0)
-        repos = CharField(index=True, default="")
+        githubId = CharField(index=True, default="")
+        telegramId = CharField(index=True, default="")
+        iyoId = CharField(index=True, default="")
         modTime = TimestampField(index=True, default=j.data.time.epoch)
 
+
         @param args is any of the above
-
-        members, owners and repos can be given as:
-            can be "a,b,c"
-            can be "'a','b','c'"
-            can be ["a","b","c"]
-            can be "a"
-
         """
 
         if "gitHostRefs" in args:
             args["gitHostRefs"] = ["%s_%s_%s" % (item["name"], item["id"], item['url']) for item in args["gitHostRefs"]]
 
-        args = self._arraysFromArgsToString(["members", "owners", "repos", "gitHostRefs"], args)
+        args = self._arraysFromArgsToString(["gitHostRefs"], args)
 
         # this will try to find the right index obj, if not create
 

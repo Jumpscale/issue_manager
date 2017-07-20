@@ -1,4 +1,5 @@
 from js9 import j
+from functools import reduce
 
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
 
@@ -11,69 +12,61 @@ from playhouse.sqlite_ext import Model
 # db = Database(':memory:')
 
 
-class IssueCollection(ModelBaseCollection):
+class RepoCollection(ModelBaseCollection):
     """
-    This class represent a collection of Issues
+    This class represent a collection of Repos
     """
 
     def _getModel(self):
-        class Issue(Model):
+        class Repo(Model):
             key = CharField(index=True, default="")
             gitHostRefs = CharField(index=True, default="")
-            title = CharField(index=True, default="")
-            creationTime = TimestampField(index=True, default=j.data.time.epoch)
-            modTime = TimestampField(index=True, default=j.data.time.epoch)
+            name = CharField(index=True, default="")
             inGithub = BooleanField(index=True, default=False)
-            labels = CharField(index=True, default="")
-            assignees = CharField(index=True, default="")
-            milestone = CharField(index=True, default="")
-            priority = CharField(index=True, default="minor")
-            type = CharField(index=True, default="unknown")
-            state = CharField(index=True, default="new")
-            content = TextField(index=False, default="")
-            repo = TextField(index=True, default="")
-            isClosed = BooleanField(index=True, default=False)
+            members = CharField(index=True, default="")
+            nrIssues = IntegerField(index=True, default=0)
+            nrMilestones = IntegerField(index=True, default=0)
+            owner = CharField(index=True, default="")
+            description = CharField(index=True, default="")
+            modTime = TimestampField(index=True, default=j.data.time.epoch)
 
             class Meta:
-                database = j.tools.issuemanager.indexDB
+                database = issuemanager.indexDB
+                # order_by = ["id"]
 
-        return Issue
+        return Repo
 
-    def _init(self):
+    def _init(self, reset=False):
         # init the index
-        db = j.tools.issuemanager.indexDB
-        Issue = self._getModel()
+        db = issuemanager.indexDB
+        Repo = self._getModel()
 
-        self.index = Issue
+        self.index = Repo
 
         if db.is_closed():
             db.connect()
-        db.create_tables([Issue], True)
+        db.create_tables([Repo], True)
 
     def reset(self):
-        db = j.tools.issuemanager.indexDB
+        db = issuemanager.indexDB
         db.drop_table(self._getModel())
 
     def add2index(self, **args):
         """
         key = CharField(index=True, default="")
         gitHostRefs = CharField(index=True, default="")
-        title = CharField(index=True, default="")
-        creationTime = TimestampField(index=True, default=j.data.time.epoch)
-        modTime = TimestampField(index=True, default=j.data.time.epoch)
+        name = CharField(index=True, default="")
         inGithub = BooleanField(index=True, default=False)
-        labels = CharField(index=True, default="")
-        assignees = CharField(index=True, default="")
-        milestone = CharField(index=True, default="")
-        priority = CharField(index=True, default="minor")
-        type = CharField(index=True, default="unknown")
-        state = CharField(index=True, default="new")
-        content = TextField(index=False, default="")
-        repo = TextField(index=True, default="")
+        members = CharField(index=True, default="")
+        nrIssues = IntegerField(index=True, default=0)
+        nrMilestones = IntegerField(index=True, default=0)
+        owner = CharField(index=True, default="")
+        description = CharField(index=True, default="")
+        modTime = TimestampField(index=True, default=j.data.time.epoch)
 
         @param args is any of the above
 
-        assignees & labels can be given as:
+        members can be given as:
             can be "a,b,c"
             can be "'a','b','c'"
             can be ["a","b","c"]
@@ -84,9 +77,10 @@ class IssueCollection(ModelBaseCollection):
         if "gitHostRefs" in args:
             args["gitHostRefs"] = ["%s_%s_%s" % (item["name"], item["id"], item['url']) for item in args["gitHostRefs"]]
 
-        args = self._arraysFromArgsToString(["assignees", "labels", "gitHostRefs"], args)
+        args = self._arraysFromArgsToString(["members", "gitHostRefs"], args)
 
         # this will try to find the right index obj, if not create
+
         obj, isnew = self.index.get_or_create(key=args["key"])
 
         for key, item in args.items():
@@ -121,19 +115,11 @@ class IssueCollection(ModelBaseCollection):
                 if not hasattr(self.index, key):
                     raise RuntimeError('%s model has no field "%s"' % (self.index._meta.name, key))
                 field = (getattr(self.index, key))
-                if isinstance(val, list):  # get range in list
-                    clauses.append(field.between(val[0], val[1]))
-                elif isinstance(field, peewee.BooleanField) or isinstance(val, bool):
-                    if j.data.types.bool.fromString(val):
-                        clauses.append(field)
-                    else:
-                        clauses.append(~field)
-                else:
-                    clauses.append(field.contains(val))
+                clauses.append(field.contains(val))
 
             res = [
                 item.key for item in self.index.select().where(
-                    peewee.reduce(
+                    reduce(
                         operator.and_,
                         clauses)).order_by(
                     self.index.modTime.desc())]

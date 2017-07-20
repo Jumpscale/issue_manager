@@ -1,3 +1,4 @@
+from issuemanagerlib import issuemanager
 
 def main(j, args, params, tags, tasklet):
     doc = args.doc
@@ -15,16 +16,16 @@ def main(j, args, params, tags, tasklet):
 
     datatype = tags.pop('kanbandata').strip()
     if datatype == 'issue' or not datatype:
-        collection = j.tools.issuemanager.getIssueCollectionFromDB()
+        collection = issuemanager.getIssueCollectionFromDB()
     if datatype == 'user':
-        collection = j.tools.issuemanager.getUserCollectionFromDB()
+        collection = issuemanager.getUserCollectionFromDB()
     if datatype == 'org' or datatype == 'organization':
-        collection = j.tools.issuemanager.getOrgCollectionFromDB()
+        collection = issuemanager.getOrgCollectionFromDB()
     if datatype == 'repo' or datatype == 'repository':
-        collection = j.tools.issuemanager.getRepoCollectionFromDB()
+        collection = issuemanager.getRepoCollectionFromDB()
 
-    user_collection = j.tools.issuemanager.getUserCollectionFromDB()
-    repo_collection = j.tools.issuemanager.getRepoCollectionFromDB()
+    user_collection = issuemanager.getUserCollectionFromDB()
+    repo_collection = issuemanager.getRepoCollectionFromDB()
 
     def emptyInYaml(results, yaml):
         for result in results:

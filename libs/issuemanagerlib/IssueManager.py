@@ -2,15 +2,15 @@
 from js9 import j
 import capnp
 
-from libs.issuemanager.models.IssueModel import IssueModel
-from libs.issuemanager.models.IssueCollection import IssueCollection
-from libs.issuemanager.models.userModel import UserModel
-from libs.issuemanager.models.userCollection import UserCollection
-from libs.issuemanager.models.repoModel import RepoModel
-from libs.issuemanager.models.repoCollection import RepoCollection
-from libs.issuemanager.models.orgModel import OrgModel
-from libs.issuemanager.models.orgCollection import OrgCollection
-from libs.issuemanager import model_capnp as ModelCapnp
+from issuemanagerlib.models.IssueModel import IssueModel
+from issuemanagerlib.models.IssueCollection import IssueCollection
+from issuemanagerlib.models.userModel import UserModel
+from issuemanagerlib.models.userCollection import UserCollection
+from issuemanagerlib.models.repoModel import RepoModel
+from issuemanagerlib.models.repoCollection import RepoCollection
+from issuemanagerlib.models.orgModel import OrgModel
+from issuemanagerlib.models.orgCollection import OrgCollection
+from issuemanagerlib import model_capnp as ModelCapnp
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
 
@@ -136,3 +136,5 @@ class IssueManager:
         if self._indexDB is None:
             self._indexDB = SqliteExtDatabase(self.indexDBPath)
         return self._indexDB
+
+issuemanager = IssueManager()

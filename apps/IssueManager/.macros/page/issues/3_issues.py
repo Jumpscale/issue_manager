@@ -1,3 +1,5 @@
+from issuemanagerlib import issuemanager
+
 def main(j, args, params, tags, tasklet):
     page = args.page
     modifier = j.portal.tools.html.htmlfactory.getPageModifierGridDataTables(page)
@@ -7,7 +9,7 @@ def main(j, args, params, tags, tasklet):
     tags = tags.getDict()
     tags.pop(args.macro)
 
-    user_collection = j.tools.issuemanager.getUserCollectionFromDB()
+    user_collection = issuemanager.getUserCollectionFromDB()
     users = {user.key: user.dbobj.name for user in user_collection.find()}
 
     if tags.get('assignees') == '$$assignees':
@@ -58,7 +60,7 @@ def main(j, args, params, tags, tasklet):
 
     fieldnames = ["Title", "Repo", "Assignees", "Priority", "State", "Creation Time"]
 
-    issue_collection = j.tools.issuemanager.getIssueCollectionFromDB()
+    issue_collection = issuemanager.getIssueCollectionFromDB()
     data = _formatdata(issue_collection.find(**tags))
 
     tableid = modifier.addTableFromData(data, fieldnames)
