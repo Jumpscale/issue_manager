@@ -1,3 +1,4 @@
+from issuemanagerlib import issuemanager
 
 def main(j, args, params, tags, tasklet):
     import yaml

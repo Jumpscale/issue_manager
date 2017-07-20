@@ -1,8 +1,9 @@
+from issuemanagerlib import issuemanager
 
 def main(j, args, params, tags, tasklet):
 
     res = {}
-    uc = j.tools.issuemanager.getUserCollectionFromDB()
+    uc = issuemanager.getUserCollectionFromDB()
     keys = []
 
     for item in uc.find():
