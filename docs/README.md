@@ -33,3 +33,18 @@ For GIG internals gogs data access and synchronization See (https://docs.greenit
 
 In general you need to serialize data into a PostgreSQL instance with a valid gogs schema and then
 generate capnp models in redis.
+
+
+## Screenshots
+
+Application Home page
+![HomePage](home.png)
+
+Issues List
+![Issues](issues.png)
+
+Users list
+![Users](users.png)
+
+Kanban
+![Kanban](kanban.png)
