@@ -14,6 +14,11 @@ IssueManager is a portal9 application used to provide a kanban overview for Issu
 ### Prefab Installation
 `prefab.apps.issuemanager.install()`
 
+### Using JumpScale bash
+
+Using JumpScale bash it is possible to set up the environment to use IssueManager which includes JumpScale and portal installation.
+Follow the install instruction [here](https://github.com/Jumpscale/bash/blob/master/README.md).
+You can then run the command `ZInstall_issuemanager` that will install JumpScale, portal as well as setting up IssueManager.
 
 ## Howto sync data
 See (https://docs.greenitglobe.com/gig/cockpit_issue_manager) for GIG internal setup.
