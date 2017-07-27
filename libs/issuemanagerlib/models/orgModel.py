@@ -1,6 +1,6 @@
 
 from js9 import j
-
+from issuemanagerlib.hostref import *
 from JumpScale9Lib.data.capnp.ModelBase import ModelBase
 
 class OrgModel(ModelBase):
@@ -62,7 +62,7 @@ class OrgModel(ModelBase):
         self.changed = True
 
     def gitHostRefSet(self, name, id):
-        return j.clients.gogs._gitHostRefSet(self, name, id)
+        return gitHostRefSet(self, name, id)
 
     def gitHostRefExists(self, name):
-        return j.clients.gogs._gitHostRefExists(self, name)
+        return gitHostRefExists(self, name)

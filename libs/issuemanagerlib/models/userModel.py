@@ -1,6 +1,6 @@
 
 from js9 import j
-
+from issuemanagerlib.hostref import *
 from JumpScale9Lib.data.capnp.ModelBase import ModelBase
 
 
@@ -13,10 +13,10 @@ class UserModel(ModelBase):
         self.collection.add2index(**self.to_dict())
 
     def gitHostRefSet(self, name, id):
-        return j.clients.gogs._gitHostRefSet(self, name, id)
+        return gitHostRefSet(self, name, id)
 
     def gitHostRefExists(self, name):
-        return j.clients.gogs._gitHostRefExists(self, name)
+        return gitHostRefExists(self, name)
 
     def _pre_save(self):
         pass
