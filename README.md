@@ -1,6 +1,6 @@
 # IssueManager
 
-IssueManager is a portal9 application used to provide a kanban overview for Issues.
+IssueManager is a [portal9](https://github.com/Jumpscale/portal9) application used to provide a kanban overview for Issues.
 
 ## Installation
 ### Manual Installation
