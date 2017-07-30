@@ -1,7 +1,7 @@
 from js9 import j
 from issuemanagerlib.IndexInfo import indexinfo
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
-from issuemanagerlib.hostref import *
+from issuemanagerlib.hostref import getFromGitHostID
 from peewee import *
 import peewee
 import operator

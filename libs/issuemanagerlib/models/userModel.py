@@ -1,6 +1,6 @@
 
 from js9 import j
-from issuemanagerlib.hostref import *
+from issuemanagerlib.hostref import gitHostRefSet, gitHostRefExists
 from JumpScale9Lib.data.capnp.ModelBase import ModelBase
 
 

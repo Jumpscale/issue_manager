@@ -6,7 +6,7 @@ import peewee
 import operator
 from playhouse.sqlite_ext import Model
 from issuemanagerlib.IndexInfo import indexinfo
-from issuemanagerlib.hostref import *
+from issuemanagerlib.hostref import getFromGitHostID
 
 # from playhouse.sqlcipher_ext import *
 # db = Database(':memory:')
