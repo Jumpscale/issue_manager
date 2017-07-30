@@ -1,13 +1,13 @@
 from js9 import j
 from functools import reduce
-
 from JumpScale9Lib.data.capnp.ModelBase import ModelBaseCollection
-
 from peewee import *
 import peewee
 import operator
 from playhouse.sqlite_ext import Model
 from issuemanagerlib.IndexInfo import indexinfo
+from issuemanagerlib.hostref import getFromGitHostID
+
 # from playhouse.sqlcipher_ext import *
 # db = Database(':memory:')
 
@@ -91,7 +91,7 @@ class RepoCollection(ModelBaseCollection):
         obj.save()
 
     def getFromGitHostID(self, git_host_name, git_host_id, git_host_url, createNew=True):
-        return j.clients.gogs._getFromGitHostID(
+        return getFromGitHostID(
             self,
             git_host_name=git_host_name,
             git_host_id=git_host_id,

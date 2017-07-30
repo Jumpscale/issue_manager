@@ -1,7 +1,7 @@
 
 from js9 import j
 import html
-
+from issuemanagerlib.hostref import gitHostRefSet, gitHostRefExists, gitHostRefGet
 from JumpScale9Lib.data.capnp.ModelBase import ModelBase
 
 
@@ -65,13 +65,13 @@ class IssueModel(ModelBase):
             content = html.escape(content)
 
     def gitHostRefSet(self, name, id):
-        return j.clients.gogs._gitHostRefSet(self, name, id)
+        return gitHostRefSet(self, name, id)
 
     def gitHostRefExists(self, name):
-        return j.clients.gogs._gitHostRefExists(self, name)
+        return gitHostRefExists(self, name)
 
     def gitHostRefGet(self, name):
-        return j.clients.gogs._gitHostRefGet(self, name)
+        return gitHostRefGet(self, name)
 
     def assigneeSet(self, key):
         """
