@@ -5,3 +5,4 @@ Time Lapsed:/issuemanager/TimeLapsed
 Users:/issuemanager/Users
 Issues:/issuemanager/Issues
 Assigned to me:/issuemanager/IssuesAssigned
+Users Activity:/issuemanager/UsersActivity

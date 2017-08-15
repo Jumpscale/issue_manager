@@ -121,3 +121,15 @@ struct User{
     iyoId@6: Text;#e.g. despiegk
     inGithub @7: Bool;
 }
+
+struct Activity {
+    name @0 :Text;
+    repo @1 :Text;
+    timestamp @2 :UInt32;
+    gitHostRefs @3 :List(GitHostRef);
+    struct GitHostRef{
+        name @0 :Text;
+        id @1 :UInt32;
+        url @2: Text;
+    }
+}

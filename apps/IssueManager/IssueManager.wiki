@@ -8,6 +8,7 @@ h5. Useful pages:
      * Overview of issues assigned to you are [here|/IssueManager/IssuesAssigned]
      * Overview of users are [here|/IssueManager/Users]
      * [Kanban|/IssueManager/Kanban]
+     * [Users' Activity|/IssueManager/UsersActivity]
 
 h5. Reports:
      * Reports per [user|/IssueManager/UserReports]

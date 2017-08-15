@@ -29,6 +29,7 @@ class GogsSynchronizer:
         self.orgCollection = issuemanager.getOrgCollectionFromDB()
         self.issueCollection = issuemanager.getIssueCollectionFromDB()
         self.repoCollection = issuemanager.getRepoCollectionFromDB()
+        self.activityCollection = issuemanager.getActivityCollectionFromDB()
 
     def createViews(self):
         self.logger.info("createviews")
@@ -147,6 +148,9 @@ class GogsSynchronizer:
 
         self.getIssuesFromPSQL(git_host_name=git_host_name)
         self.logger.info("Issues synced")
+
+        self.getActivityFromPSQL(git_host_name=git_host_name)
+        self.logger.info("Activity synced")
 
         self.reset()
 
@@ -431,3 +435,16 @@ class GogsSynchronizer:
             print("DEBUG NOW setUsersYaml")
             embed()
             raise RuntimeError("stop debug here")
+
+    def getActivityFromPSQL(self, git_host_name):
+        query = self.model.Action.raw('SELECT id, created_unix, act_user_name, repo_user_name, repo_name FROM action')
+        result = query.execute()
+
+        for res in result:
+            activity_model = self.activityCollection.getFromGitHostID(
+                git_host_name=git_host_name, git_host_id=res.id, git_host_url='')
+            activity_model.dbobj.name = res.act_user_name
+            activity_model.dbobj.timestamp = res.created_unix
+            activity_model.dbobj.repo = '%s/%s' % (res.repo_user_name, res.repo_name)
+
+            activity_model.save()

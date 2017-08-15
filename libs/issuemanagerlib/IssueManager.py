@@ -10,6 +10,8 @@ from issuemanagerlib.models.repoModel import RepoModel
 from issuemanagerlib.models.repoCollection import RepoCollection
 from issuemanagerlib.models.orgModel import OrgModel
 from issuemanagerlib.models.orgCollection import OrgCollection
+from issuemanagerlib.models.activityModel import ActivityModel
+from issuemanagerlib.models.activityCollection import ActivityCollection
 from . import model_capnp as ModelCapnp
 from peewee import *
 from playhouse.sqlite_ext import SqliteExtDatabase
@@ -84,6 +86,12 @@ class IssueManager:
         """
         return ModelCapnp.Organization
 
+    def getActivitySchema(self):
+        """
+        Return capnp schema for activity struct
+        """
+        return ModelCapnp.Activity
+
     def getIssueCollectionFromDB(self, kvs=None):
         """
         std keyvalue stor is redis used by core
@@ -129,6 +137,17 @@ class IssueManager:
         collection = j.data.capnp.getModelCollection(
             schema, namespace=self.namespace + ":org", category="orgs", modelBaseClass=OrgModel,
             modelBaseCollectionClass=OrgCollection, db=kvs, indexDb=kvs)
+        return collection
+
+    def getActivityCollectionFromDB(self, kvs=None):
+        schema = self.getActivitySchema()
+        if not kvs:
+            kvs = j.data.kvs.getRedisStore(name=self.store, namespace=self.namespace + ":org",
+                                              unixsocket="%s/redis.sock" % j.dirs.TMPDIR)
+
+        collection = j.data.capnp.getModelCollection(
+            schema, namespace=self.namespace + ":org", category="activity", modelBaseClass=ActivityModel,
+            modelBaseCollectionClass=ActivityCollection, db=kvs, indexDb=kvs)
         return collection
 
     @property
