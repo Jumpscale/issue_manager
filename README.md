@@ -27,7 +27,7 @@ See (https://docs.greenitglobe.com/gig/cockpit_issue_manager) for GIG internal s
 ### Syncing from Github:
 You need to get client for your github.
 
-```    
+```
 gl = j.clients.github.getClient(token)
 gl.syncAllFromGithub(org1Name, org2Name, org3Name)
 ```
@@ -41,7 +41,7 @@ generate capnp models in redis.
 
 ### Using the IssueManager macros
 
-There are three macros for the issuemanager:
+There are four macros for the issuemanager:
 1. **kanbandata macro**
     * to use:
     ```
@@ -82,6 +82,11 @@ There are three macros for the issuemanager:
     # use extra tags to filter. eg: "priority:critical" or "assignees:despiegk"
     {{issue_time_reports groupon:creationTime ranges:4h,2d,4d}}
     ```
+
+4. **users_activity macro**
+    shows a heatmap of users' on all gogs repos.
+    * to use
+        * `{{users_activity }}`
 
 _Use the jinja templating in the example reports to make your reports visual_
 
