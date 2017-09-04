@@ -38,14 +38,19 @@ def main(j, args, params, tags, tasklet):
                 data_collection.setdefault(assignee, {'resolved': [], 'closed': [], 'wontfix': [], 'inprogress': [], 'question':[], 'new':[]})
 
                 issue_dict = issue.to_dict()
+                issue_dict.pop('comments', None)
+                issue_dict.pop('content', None)
                 data_collection[assignee][issue_dict['state']].append(issue_dict)
         else:
             data = str(getattr(issue.dbobj, groupon)) or 'no %s' % groupon
             data_collection.setdefault(data, {'resolved': [], 'closed': [], 'wontfix': [], 'inprogress': [], 'question':[], 'new':[]})
-            issue = issue.to_dict()
-            data_collection[data][issue['state']].append(issue)
+            issue_dict = issue.to_dict()
+            issue_dict.pop('comments', None)
+            issue_dict.pop('content', None)
+            data_collection[data][issue_dict['state']].append(issue_dict)
 
-    out = "{{report:\n%s \n}}" % j.data.serializer.yaml.dumps(data_collection)
+    data_collection = j.data.serializer.yaml.dumps(data_collection)
+    out = "{{report:\n%s \n}}" % data_collection
     params.result = (out, args.doc)
 
     return params

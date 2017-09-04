@@ -64,6 +64,8 @@ def main(j, args, params, tags, tasklet):
             data_collection.setdefault(span, {'resolved': [], 'closed': [], 'wontfix': [], 'inprogress': [], 'question':[], 'new':[]})
             issue = issue.to_dict()
             issue['modTime'] = j.data.time.epoch2HRDateTime(issue['modTime'])
+            issue.pop('content', None)
+            issue.pop('comments', None)
             data_collection[span][issue['state']].append(issue)
 
     out = "{{report:\n%s \n}}" % j.data.serializer.yaml.dumps(data_collection)

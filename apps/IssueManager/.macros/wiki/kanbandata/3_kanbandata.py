@@ -1,4 +1,5 @@
 from issuemanagerlib import issuemanager
+import html
 
 def main(j, args, params, tags, tasklet):
     doc = args.doc
@@ -31,10 +32,8 @@ def main(j, args, params, tags, tasklet):
         for result in results:
             result = result.dictFiltered
             title_link = '<a href="'+ result['gitHostRefs'][0]['url'] + '" target="_blank">' + result["title"] + '</a>'
-            # body = result.get('content', '')
-            body = result.get('content', "").replace('{', '').replace('}', '')
             data = {'title': title_link,
-                    'content': body,
+                    'content': '',
                     'key': result['key'],
                     'state': 'done' if result['isClosed'] else 'new'}
             data['assignees'] = result['assignees'] if result['assignees'] else [0]
