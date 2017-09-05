@@ -437,7 +437,7 @@ class GogsSynchronizer:
             raise RuntimeError("stop debug here")
 
     def getActivityFromPSQL(self, git_host_name):
-        query = self.model.Action.raw('SELECT id, created_unix, act_user_name, repo_user_name, repo_name FROM action')
+        query = self.model.Action.raw('SELECT id, created_unix, act_user_name, repo_user_name, repo_name FROM action WHERE created_unix > %s' % j.data.time.getEpochAgo('-30d'))
         result = query.execute()
 
         for res in result:
